@@ -42,10 +42,6 @@ class KanbanBoard extends React.Component {
     ];
   }
 
-  componentDidUpdate() {
-    console.log(projectList);
-  }
-
   componentDidMount() {
     this.setState({ projects: projectList, isLoading: false });
   }
@@ -62,6 +58,7 @@ class KanbanBoard extends React.Component {
       return projectObject.name === project.name;
     }).project_stage = this.state.draggedOverCol;
     this.setState({ projects: updatedProjects });
+    console.log(projectList);
   }
 
   render() {
@@ -143,7 +140,48 @@ class KanbanColumn extends React.Component {
         </h4>
         {this.generateKanbanCards()}
         <br />
+        <KabanInput stage={this.props.stage} />
       </div>
+    );
+  }
+}
+
+/*
+ * The Kaban Board Card Input component
+ */
+class KabanInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { projects: [] };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ projects: projectList });
+  }
+
+  handleSubmit() {
+    projects.push({
+      description: this.state.value,
+      project_stage: this.props.stage
+    });
+    event.preventDefault();
+  }
+
+  render() {
+    const inputStyle = {
+      borderRadius: "4px"
+    };
+    const formStyle = {
+      padding: "4px",
+      width: "100%"
+    };
+    return (
+      <form style={formStyle}>
+        <input style={inputStyle} type="text" />
+        <input type="submit" value="Envoyer" />
+      </form>
     );
   }
 }
@@ -154,9 +192,6 @@ class KanbanColumn extends React.Component {
 class KanbanCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      collapsed: true
-    };
   }
 
   render() {
@@ -178,25 +213,9 @@ class KanbanCard extends React.Component {
           this.props.onDragEnd(e, this.props.project);
         }}
       >
+        <div>{this.props.project.description}</div>
         <div>
-          <h4>{this.props.project.name}</h4>
-        </div>
-        {this.state.collapsed ? null : (
-          <div>
-            <strong>Description: </strong>
-            {this.props.project.description}
-            <br />
-          </div>
-        )}
-        <div
-          style={{ width: "100%" }}
-          onClick={e => {
-            this.setState({ collapsed: !this.state.collapsed });
-          }}
-        >
-          {this.state.collapsed
-            ? String.fromCharCode("9660")
-            : String.fromCharCode("9650")}
+          <img src="e" height="10px" />
         </div>
       </div>
     );
